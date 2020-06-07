@@ -12,19 +12,23 @@ import java.awt.Font;
 
 public class Janela extends JFrame {
   protected JButton btnPonto = new JButton("Ponto"),
-          btnLinha = new JButton("Linha"),
-          btnCirculo = new JButton("Circulo"),
-          btnElipse = new JButton("Elipse"),
-          btnQuadrado = new JButton("Quadrado"),
-          btnRetangulo = new JButton("Retangulo"),
-          btnPoligono = new JButton("Polígono"),
-          btnTexto = new JButton("Texto"),
-          btnCorContorno = new JButton("Contorno"),
-          btnCorPreenchimento = new JButton("Preenchimento"),
-          btnAbrir = new JButton("Abrir"),
-          btnSalvar = new JButton("Salvar"),
-          btnApagar = new JButton("Apagar"),
-          btnSair = new JButton("Sair");
+    btnLinha = new JButton("Linha"),
+    btnCirculo = new JButton("Circulo"),
+    btnElipse = new JButton("Elipse"),
+    btnQuadrado = new JButton("Quadrado"),
+    btnRetangulo = new JButton("Retangulo"),
+    btnPoligono = new JButton("Polígono"),
+    btnTexto = new JButton("Texto"),
+    btnCorContorno = new JButton("Contorno"),
+    btnCorPreenchimento = new JButton("Preenchimento"),
+    btnAbrir = new JButton("Abrir"),
+    btnSalvar = new JButton("Salvar"),
+    btnApagar = new JButton("Apagar"),
+    btnSair = new JButton("Sair"),
+    btnConectar = new JButton("Conectar"),
+    btnDesconectar = new JButton("Desconectar"),
+    btnSalvarRemoto = new JButton("Salvar no servidor"),
+    btnSelecionar = new JButton("Selecionar do servidor");
 
   protected MeuJPanel pnlDesenho = new MeuJPanel();
 
@@ -44,8 +48,6 @@ public class Janela extends JFrame {
   protected Ponto fimQuadrado;
   protected Ponto inicioRetangulo;
   protected Ponto fimRetangulo;
-  protected Ponto inicioPoligono;
-  protected Ponto fimPoligono;
 
   protected int linhasTemporarias = 0, linhasTotal = 0;
   protected String texto = "";
@@ -208,10 +210,58 @@ public class Janela extends JFrame {
       btnSair.setIcon(new ImageIcon(btnSairImg));
     } catch (IOException e) {
       JOptionPane.showMessageDialog(
-        null,
-        "Arquivo sair.jpg n�o foi encontrado",
-        "Arquivo de imagem ausente",
-        JOptionPane.WARNING_MESSAGE
+          null,
+          "Arquivo sair.jpg n�o foi encontrado",
+          "Arquivo de imagem ausente",
+          JOptionPane.WARNING_MESSAGE
+      );
+    }
+
+    try {
+      Image btnConectarImg = ImageIO.read(getClass().getResource("resources/conectar.jpg"));
+      btnConectar.setIcon(new ImageIcon(btnConectarImg));
+    } catch (IOException e) {
+      JOptionPane.showMessageDialog(
+          null,
+          "Arquivo conectar.jpg não foi encontrado",
+          "Arquivo de imagem ausente",
+          JOptionPane.WARNING_MESSAGE
+      );
+    }
+
+    try {
+      Image img = ImageIO.read(getClass().getResource("resources/desconectar.jpg"));
+      btnDesconectar.setIcon(new ImageIcon(img));
+    } catch (IOException e) {
+      JOptionPane.showMessageDialog(
+          null,
+          "Arquivo desconectar.jpg não foi encontrado",
+          "Arquivo de imagem ausente",
+          JOptionPane.WARNING_MESSAGE
+      );
+    }
+
+    try {
+      Image img = ImageIO.read(getClass().getResource("resources/salvarRemoto.jpg"));
+      btnSalvarRemoto.setIcon(new ImageIcon(img));
+    } catch (IOException e) {
+      JOptionPane.showMessageDialog(
+          null,
+          "Arquivo salvarRemoto.jpg não foi encontrado",
+          "Arquivo de imagem ausente",
+          JOptionPane.WARNING_MESSAGE
+      );
+    }
+
+    try {
+      Image img = ImageIO.read(getClass().getResource("resources/carregar.jpg"));
+      btnSelecionar.setIcon(new ImageIcon(img));
+    } catch (IOException e) {
+      JOptionPane.showMessageDialog(
+          null,
+          "Arquivo carregar.jpg não foi encontrado",
+          "Arquivo de imagem ausente",
+          JOptionPane.WARNING_MESSAGE
       );
     }
 
@@ -229,6 +279,10 @@ public class Janela extends JFrame {
     btnSair.addActionListener(new EncerrarPrograma());
     btnSalvar.addActionListener(new SalvarArquivo());
     btnApagar.addActionListener(new Apagar());
+    btnConectar.addActionListener(new Conectar());
+    //btnSalvarRemoto.addActionListener(new SalvarRemoto());
+    //btnDesconectar.addActionListener(new Desconectar());
+    //btnSelecionar.addActionListener(new SelecionarRemoto());
 
     JPanel pnlBotoes = new JPanel();
     JPanel pnlBotoes2 = new JPanel();
@@ -238,6 +292,11 @@ public class Janela extends JFrame {
     GridLayout grdBotoes = new GridLayout(2, 1);
     pnlBotoes.setLayout(flwBotoes1);
     pnlBotoes2.setLayout(flwBotoes2);
+    JPanel pnlBotoesCliente = new JPanel();
+    JPanel botoesCliente = new JPanel();
+    FlowLayout flwBotoesCliente = new FlowLayout();
+    GridLayout grdBotoesCliente = new GridLayout(2, 1);
+    pnlBotoesCliente.setLayout(flwBotoesCliente);
 
     pnlBotoes.add(btnAbrir);
     pnlBotoes.add(btnSalvar);
@@ -253,14 +312,20 @@ public class Janela extends JFrame {
     pnlBotoes2.add(btnCorPreenchimento);
     pnlBotoes2.add(btnApagar);
     pnlBotoes2.add(btnSair);
+    pnlBotoesCliente.add(btnConectar);
+    pnlBotoesCliente.add(btnSelecionar);
+    pnlBotoesCliente.add(btnSalvarRemoto);
+    pnlBotoesCliente.add(btnDesconectar);
     botoes.setLayout(grdBotoes);
     botoes.add(pnlBotoes);
     botoes.add(pnlBotoes2);
 
     JPanel pnlStatus = new JPanel();
+    botoesCliente.setLayout(grdBotoesCliente);
     GridLayout grdStatus = new GridLayout(1, 2);
     pnlStatus.setLayout(grdStatus);
-
+    botoesCliente.add(pnlBotoesCliente);
+    botoesCliente.add(pnlStatus);
     pnlStatus.add(statusBar1);
     pnlStatus.add(statusBar2);
 
@@ -268,7 +333,7 @@ public class Janela extends JFrame {
     cntForm.setLayout(new BorderLayout());
     cntForm.add(botoes, BorderLayout.NORTH);
     cntForm.add(pnlDesenho, BorderLayout.CENTER);
-    cntForm.add(pnlStatus, BorderLayout.SOUTH);
+    cntForm.add(botoesCliente, BorderLayout.SOUTH);
 
     this.addWindowListener(new FechamentoDeJanela());
 
@@ -866,6 +931,13 @@ public class Janela extends JFrame {
     public void windowClosing(WindowEvent e)
     {
       System.exit(0);
+    }
+  }
+
+  protected static class Conectar implements ActionListener {
+    public void actionPerformed(ActionEvent e)
+    {
+      new Cliente("localhost", 3000);
     }
   }
 }
