@@ -5,87 +5,86 @@ import java.util.concurrent.Semaphore;
 
 public class Parceiro
 {
-    private Socket             conexao;
-    private ObjectInputStream  receptor;
-    private ObjectOutputStream transmissor;
-    
-    private Comunicado proximoComunicado=null;
+  private final Socket conexao;
+  private final ObjectInputStream receptor;
+  private final ObjectOutputStream transmissor;
 
-    private Semaphore mutEx = new Semaphore (1,true);
+  private Comunicado proximoComunicado=null;
 
-    public Parceiro (Socket             conexao,
-                     ObjectInputStream  receptor,
-                     ObjectOutputStream transmissor)
-                     throws Exception // se parametro nulos
+  private final Semaphore mutEx = new Semaphore (1, true);
+
+  public Parceiro (Socket conexao, ObjectInputStream receptor, ObjectOutputStream transmissor) throws Exception
+  {
+    if (conexao == null)
+      throw new Exception("Conexão ausente");
+
+    if (receptor==null)
+      throw new Exception("Receptor ausente");
+
+    if (transmissor==null)
+      throw new Exception("Transmissor ausente");
+
+    this.conexao = conexao;
+    this.receptor = receptor;
+    this.transmissor = transmissor;
+  }
+
+  public void receba(Comunicado x) throws Exception
+  {
+    try
     {
-        if (conexao==null)
-            throw new Exception ("Conexao ausente");
-
-        if (receptor==null)
-            throw new Exception ("Receptor ausente");
-
-        if (transmissor==null)
-            throw new Exception ("Transmissor ausente");
-
-        this.conexao     = conexao;
-        this.receptor    = receptor;
-        this.transmissor = transmissor;
+      this.transmissor.writeObject(x);
+      this.transmissor.flush();
     }
-
-    public void receba (Comunicado x) throws Exception
+    catch (IOException erro)
     {
-        try
-        {
-            this.transmissor.writeObject (x);
-            this.transmissor.flush       ();
-        }
-        catch (IOException erro)
-        {
-            throw new Exception ("Erro de transmissao");
-        }
+      throw new Exception ("Erro de transmissão");
     }
+  }
 
-    public Comunicado espie () throws Exception
+  public Comunicado espie() throws Exception
+  {
+    try
     {
-        try
-        {
-            this.mutEx.acquireUninterruptibly();
-            if (this.proximoComunicado==null) this.proximoComunicado = (Comunicado)this.receptor.readObject();
-            this.mutEx.release();
-            return this.proximoComunicado;
-        }
-        catch (Exception erro)
-        {
-            throw new Exception ("Erro de recepcao");
-        }
+      this.mutEx.acquireUninterruptibly();
+      if (this.proximoComunicado == null)
+        this.proximoComunicado = (Comunicado)this.receptor.readObject();
+      this.mutEx.release();
+      return this.proximoComunicado;
     }
+    catch (Exception erro)
+    {
+      throw new Exception ("Erro de recepção");
+    }
+  }
 
-    public Comunicado envie () throws Exception
+  public Comunicado envie() throws Exception
+  {
+    try
     {
-        try
-        {
-            if (this.proximoComunicado==null) this.proximoComunicado = (Comunicado)this.receptor.readObject();
-            Comunicado ret         = this.proximoComunicado;
-            this.proximoComunicado = null;
-            return ret;
-        }
-        catch (Exception erro)
-        {
-            throw new Exception ("Erro de recepcao");
-        }
+      if (this.proximoComunicado == null)
+        this.proximoComunicado = (Comunicado)this.receptor.readObject();
+      Comunicado ret = this.proximoComunicado;
+      this.proximoComunicado = null;
+      return ret;
     }
+    catch (Exception erro)
+    {
+      throw new Exception ("Erro de recepção");
+    }
+  }
 
-    public void adeus () throws Exception
+  public void adeus() throws Exception
+  {
+    try
     {
-        try
-        {
-            this.transmissor.close();
-            this.receptor   .close();
-            this.conexao    .close();
-        }
-        catch (Exception erro)
-        {
-            throw new Exception ("Erro de desconexao");
-        }
+      this.transmissor.close();
+      this.receptor.close();
+      this.conexao.close();
     }
+    catch (Exception erro)
+    {
+      throw new Exception ("Erro de desconexão");
+    }
+  }
 }

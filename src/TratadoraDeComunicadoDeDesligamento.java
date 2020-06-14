@@ -2,31 +2,31 @@ import java.net.*;
 
 public class TratadoraDeComunicadoDeDesligamento extends Thread
 {
-    private Parceiro servidor;
+  private final Parceiro servidor;
 
-    public TratadoraDeComunicadoDeDesligamento (Parceiro servidor) throws Exception
+  public TratadoraDeComunicadoDeDesligamento(Parceiro servidor) throws Exception
+  {
+    if (servidor == null)
+      throw new Exception ("Porta inválida");
+
+    this.servidor = servidor;
+  }
+
+  public void run ()
+  {
+    for(;;)
     {
-        if (servidor==null)
-            throw new Exception ("Porta invalida");
-
-        this.servidor = servidor;
-    }
-
-    public void run ()
-    {
-        for(;;)
+      try
+      {
+        if (this.servidor.espie() instanceof ComunicadoDeDesligamento)
         {
-			try
-			{
-				if (this.servidor.espie() instanceof ComunicadoDeDesligamento)
-				{
-					System.out.println ("\nO servidor vai ser desligado agora;");
-				    System.err.println ("volte mais tarde!\n");
-				    System.exit(0);
-				}
-			}
-			catch (Exception erro)
-			{}
+          System.out.println ("\nO servidor vai ser desligado agora;");
+          System.err.println ("volte mais tarde!\n");
+          System.exit(0);
         }
+      }
+      catch (Exception ignored)
+      {}
     }
+  }
 }
