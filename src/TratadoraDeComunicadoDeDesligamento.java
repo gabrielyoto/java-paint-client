@@ -1,5 +1,3 @@
-import java.net.*;
-
 public class TratadoraDeComunicadoDeDesligamento extends Thread
 {
   private final Parceiro servidor;
@@ -7,12 +5,12 @@ public class TratadoraDeComunicadoDeDesligamento extends Thread
   public TratadoraDeComunicadoDeDesligamento(Parceiro servidor) throws Exception
   {
     if (servidor == null)
-      throw new Exception ("Porta inválida");
+      throw new Exception("Porta inválida");
 
     this.servidor = servidor;
   }
 
-  public void run ()
+  public void run()
   {
     for(;;)
     {

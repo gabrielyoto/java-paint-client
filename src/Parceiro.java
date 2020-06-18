@@ -9,19 +9,19 @@ public class Parceiro
   private final ObjectInputStream receptor;
   private final ObjectOutputStream transmissor;
 
-  private Comunicado proximoComunicado=null;
+  private Comunicado proximoComunicado = null;
 
   private final Semaphore mutEx = new Semaphore (1, true);
 
-  public Parceiro (Socket conexao, ObjectInputStream receptor, ObjectOutputStream transmissor) throws Exception
+  public Parceiro(Socket conexao, ObjectInputStream receptor, ObjectOutputStream transmissor) throws Exception
   {
     if (conexao == null)
       throw new Exception("Conexão ausente");
 
-    if (receptor==null)
+    if (receptor == null)
       throw new Exception("Receptor ausente");
 
-    if (transmissor==null)
+    if (transmissor == null)
       throw new Exception("Transmissor ausente");
 
     this.conexao = conexao;
@@ -29,11 +29,11 @@ public class Parceiro
     this.transmissor = transmissor;
   }
 
-  public void receba(Comunicado x) throws Exception
+  public void receba(Comunicado comunicado) throws Exception
   {
     try
     {
-      this.transmissor.writeObject(x);
+      this.transmissor.writeObject(comunicado);
       this.transmissor.flush();
     }
     catch (IOException erro)

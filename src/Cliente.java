@@ -6,6 +6,8 @@ public class Cliente
 	public static final String HOST_PADRAO  = "localhost";
 	public static final int PORTA_PADRAO = 3000;
 
+	protected Parceiro servidor = null;
+
 	public Cliente() throws ConnectException
 	{
 		this(HOST_PADRAO, PORTA_PADRAO);
@@ -56,6 +58,7 @@ public class Cliente
 		try
 		{
 				servidor = new Parceiro(conexao, receptor, transmissor);
+				this.servidor = servidor;
 		}
 		catch (Exception erro)
 		{
@@ -63,21 +66,28 @@ public class Cliente
 				throw new ConnectException();
 		}
 
-		TratadoraDeComunicadoDeDesligamento tratadoraDeComunicadoDeDesligamento = null;
+		TratadoraDeComunicadoDeDesligamento tratadoraDeComunicadoDeDesligamento;
 		try
 		{
 			tratadoraDeComunicadoDeDesligamento = new TratadoraDeComunicadoDeDesligamento(servidor);
 		}
 		catch (Exception ignored)
-		{} // sei que servidor foi instanciado
+		{
+			throw new ConnectException();
+		}
 
 		tratadoraDeComunicadoDeDesligamento.start();
+	}
 
+	public void desconectarSe()
+	{
 		try
 		{
 			servidor.receba(new PedidoParaSair());
 		}
-		catch (Exception erro)
-		{}
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
 	}
 }

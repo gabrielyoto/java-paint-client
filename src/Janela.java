@@ -58,6 +58,7 @@ public class Janela extends JFrame {
   protected Vector<Figura> figuras = new Vector<>();
   protected Vector<Figura> linhasProv = new Vector<>();
 
+  protected Cliente cliente = null;
 
   public Janela() {
     super("Editor Gráfico");
@@ -282,7 +283,7 @@ public class Janela extends JFrame {
     btnApagar.addActionListener(new Apagar());
     btnConectar.addActionListener(new Conectar());
     //btnSalvarRemoto.addActionListener(new SalvarRemoto());
-    //btnDesconectar.addActionListener(new Desconectar());
+    btnDesconectar.addActionListener(new Desconectar());
     //btnSelecionar.addActionListener(new SelecionarRemoto());
 
     JPanel pnlBotoes = new JPanel();
@@ -940,13 +941,27 @@ public class Janela extends JFrame {
     {
       try
       {
-        new Cliente("localhost", 3000);
+        cliente = new Cliente("localhost", 3000);
+        statusBar1.setText("Mensagem: Conectado!");
       }
       catch (ConnectException ex)
       {
         JOptionPane.showMessageDialog(Janela.this, "Não foi possível conectar ao " +
             "servidor!\nTente novamente mais tarde");
       }
+    }
+  }
+
+  protected class Desconectar implements ActionListener {
+    public void actionPerformed(ActionEvent e) {
+      if (cliente == null)
+      {
+        JOptionPane.showMessageDialog(Janela.this, "Nenhuma conexão encontrada!");
+        return;
+      }
+      cliente.desconectarSe();
+      statusBar1.setText("Mensagem: Desconectado!");
+      cliente = null;
     }
   }
 }
