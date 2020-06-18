@@ -34,6 +34,7 @@ public class Janela extends JFrame {
   protected MeuJPanel pnlDesenho = new MeuJPanel();
 
   protected JLabel statusBar1 = new JLabel("Mensagem:");
+  protected JLabel statusBarCon = new JLabel("Conexão: desconectado");
   protected JLabel statusBar2 = new JLabel("Coordenada:");
 
   protected boolean esperaPonto, esperaInicioReta, esperaFimReta, esperaCentro, esperaRaio,
@@ -323,13 +324,17 @@ public class Janela extends JFrame {
     botoes.add(pnlBotoes2);
 
     JPanel pnlStatus = new JPanel();
+    JPanel pnlStatus2 = new JPanel();
     botoesCliente.setLayout(grdBotoesCliente);
     GridLayout grdStatus = new GridLayout(1, 2);
+    pnlStatus2.setLayout(grdStatus);
     pnlStatus.setLayout(grdStatus);
     botoesCliente.add(pnlBotoesCliente);
     botoesCliente.add(pnlStatus);
     pnlStatus.add(statusBar1);
-    pnlStatus.add(statusBar2);
+    pnlStatus2.add(statusBarCon);
+    pnlStatus2.add(statusBar2);
+    pnlStatus.add(pnlStatus2);
 
     Container cntForm = this.getContentPane();
     cntForm.setLayout(new BorderLayout());
@@ -942,7 +947,7 @@ public class Janela extends JFrame {
       try
       {
         cliente = new Cliente("localhost", 3000);
-        statusBar1.setText("Mensagem: Conectado!");
+        statusBarCon.setText("Conexão: conectado");
       }
       catch (ConnectException ex)
       {
@@ -960,7 +965,7 @@ public class Janela extends JFrame {
         return;
       }
       cliente.desconectarSe();
-      statusBar1.setText("Mensagem: Desconectado!");
+      statusBarCon.setText("Conexão: desconectado");
       cliente = null;
     }
   }
