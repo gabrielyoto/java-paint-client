@@ -1,5 +1,6 @@
 import java.net.*;
 import java.io.*;
+import java.util.Vector;
 
 public class Cliente
 {
@@ -77,6 +78,16 @@ public class Cliente
 		}
 
 		tratadoraDeComunicadoDeDesligamento.start();
+	}
+
+	public void salvar(Vector<Figura> figuras)
+	{
+		try
+		{
+			servidor.receba(new PedidoDeSalvar(figuras));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void desconectarSe()

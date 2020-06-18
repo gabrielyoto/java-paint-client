@@ -1,7 +1,7 @@
 import java.awt.*;
 import java.util.Scanner;
 
-public abstract class Figura
+public abstract class Figura extends Comunicado
 {
   protected Color corContorno, corPreenchimento;
 

@@ -283,7 +283,7 @@ public class Janela extends JFrame {
     btnSalvar.addActionListener(new SalvarArquivo());
     btnApagar.addActionListener(new Apagar());
     btnConectar.addActionListener(new Conectar());
-    //btnSalvarRemoto.addActionListener(new SalvarRemoto());
+    btnSalvarRemoto.addActionListener(new SalvarRemoto());
     btnDesconectar.addActionListener(new Desconectar());
     //btnSelecionar.addActionListener(new SelecionarRemoto());
 
@@ -967,6 +967,17 @@ public class Janela extends JFrame {
       cliente.desconectarSe();
       statusBarCon.setText("Conexão: desconectado");
       cliente = null;
+    }
+  }
+
+  protected class SalvarRemoto implements ActionListener {
+    public void actionPerformed(ActionEvent e) {
+      if (cliente == null)
+      {
+        JOptionPane.showMessageDialog(Janela.this, "Nenhuma conexão encontrada!");
+        return;
+      }
+      cliente.salvar(figuras);
     }
   }
 }
