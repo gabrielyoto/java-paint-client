@@ -7,6 +7,7 @@ import javax.swing.*;
 import javax.imageio.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.*;
+import java.net.ConnectException;
 import java.util.*;
 import java.awt.Font;
 
@@ -313,8 +314,8 @@ public class Janela extends JFrame {
     pnlBotoes2.add(btnApagar);
     pnlBotoes2.add(btnSair);
     pnlBotoesCliente.add(btnConectar);
-    pnlBotoesCliente.add(btnSelecionar);
     pnlBotoesCliente.add(btnSalvarRemoto);
+    pnlBotoesCliente.add(btnSelecionar);
     pnlBotoesCliente.add(btnDesconectar);
     botoes.setLayout(grdBotoes);
     botoes.add(pnlBotoes);
@@ -934,10 +935,18 @@ public class Janela extends JFrame {
     }
   }
 
-  protected static class Conectar implements ActionListener {
+  protected class Conectar implements ActionListener {
     public void actionPerformed(ActionEvent e)
     {
-      new Cliente("localhost", 3000);
+      try
+      {
+        new Cliente("localhost", 3000);
+      }
+      catch (ConnectException ex)
+      {
+        JOptionPane.showMessageDialog(Janela.this, "Não foi possível conectar ao " +
+            "servidor!\nTente novamente mais tarde");
+      }
     }
   }
 }
