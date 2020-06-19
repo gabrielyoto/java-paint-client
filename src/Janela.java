@@ -8,6 +8,8 @@ import javax.imageio.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.*;
 import java.net.ConnectException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.awt.Font;
 
@@ -60,6 +62,9 @@ public class Janela extends JFrame {
   protected Vector<Figura> linhasProv = new Vector<>();
 
   protected Cliente cliente = null;
+  DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+  protected final String hoje = dtf.format(LocalDateTime.now());
+  protected Desenho desenho = new Desenho("", hoje, hoje);
 
   public Janela() {
     super("Editor Gráfico");
@@ -364,6 +369,7 @@ public class Janela extends JFrame {
       if (esperaPonto) {
         try {
           figuras.add(new Ponto(e.getX(), e.getY(), corContorno));
+          desenho.addFigura(figuras.get(figuras.size() - 1).toString());
         } catch (Exception ex) {
           System.out.println(ex.getMessage());
         }
@@ -381,6 +387,7 @@ public class Janela extends JFrame {
       } else if (esperaFimReta) {
         esperaFimReta = false;
         esperaInicioReta = true;
+        desenho.addFigura(figuras.get(figuras.size() - 1).toString());
         linhasTemporarias = 0;
         statusBar1.setText("Mensagem:");
       } else if (esperaCentro) {
@@ -395,6 +402,7 @@ public class Janela extends JFrame {
       } else if (esperaRaio) {
         esperaRaio = false;
         linhasTemporarias = 0;
+        desenho.addFigura(figuras.get(figuras.size() - 1).toString());
         statusBar1.setText("Mensagem: ");
         esperaCentro = true;
       } else if (esperaInicioElipse) {
@@ -411,6 +419,7 @@ public class Janela extends JFrame {
         linhasTemporarias = 0;
         esperaFimElipse = false;
         esperaInicioElipse = true;
+        desenho.addFigura(figuras.get(figuras.size() - 1).toString());
       } else if (esperaInicioQuadrado) {
         try {
           inicioQuadrado = new Ponto(e.getX(), e.getY(), corContorno);
@@ -425,6 +434,7 @@ public class Janela extends JFrame {
         statusBar1.setText("Mensagem: ");
         esperaFimQuadrado = false;
         esperaInicioQuadrado = true;
+        desenho.addFigura(figuras.get(figuras.size() - 1).toString());
       } else if (esperaInicioRetangulo) {
         try {
           inicioRetangulo = new Ponto(e.getX(), e.getY(), corContorno);
@@ -438,6 +448,7 @@ public class Janela extends JFrame {
         linhasTemporarias = 0;
         esperaFimRetangulo = false;
         statusBar1.setText("Mensagem: ");
+        desenho.addFigura(figuras.get(figuras.size() - 1).toString());
         esperaInicioRetangulo = true;
       } else if (esperaTexto) {
         try {
@@ -447,6 +458,7 @@ public class Janela extends JFrame {
           );
           text.torneSeVisivel(pnlDesenho.getGraphics());
           figuras.add(text);
+          desenho.addFigura(figuras.get(figuras.size() - 1).toString());
         } catch (Exception ex) {
           ex.printStackTrace();
         }
@@ -488,6 +500,7 @@ public class Janela extends JFrame {
         }
         linhasX.clear();
         linhasY.clear();
+        desenho.addFigura(figuras.get(figuras.size() - 1).toString());
         statusBar1.setText("Mensagem: ");
       }
     }
@@ -977,7 +990,7 @@ public class Janela extends JFrame {
         JOptionPane.showMessageDialog(Janela.this, "Nenhuma conexão encontrada!");
         return;
       }
-      cliente.salvar(figuras);
+      cliente.salvar(desenho);
     }
   }
 }

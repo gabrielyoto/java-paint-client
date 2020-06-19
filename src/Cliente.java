@@ -80,11 +80,11 @@ public class Cliente
 		tratadoraDeComunicadoDeDesligamento.start();
 	}
 
-	public void salvar(Vector<Figura> figuras)
+	public void salvar(Desenho desenho)
 	{
 		try
 		{
-			servidor.receba(new PedidoDeSalvar(figuras));
+			servidor.receba(new PedidoSalvamento(desenho));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
