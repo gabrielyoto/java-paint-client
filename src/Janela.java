@@ -990,6 +990,10 @@ public class Janela extends JFrame {
         JOptionPane.showMessageDialog(Janela.this, "Nenhuma conexão encontrada!");
         return;
       }
+      String nome = desenho.getNome();
+      if (nome.equals(""))
+        nome = JOptionPane.showInputDialog(Janela.this, "Digite o nome do desenho");
+      desenho.setNome(nome);
       cliente.salvar(desenho);
     }
   }
