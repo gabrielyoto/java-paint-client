@@ -959,7 +959,14 @@ public class Janela extends JFrame {
     {
       try
       {
-        cliente = new Cliente("localhost", 3000);
+        String[] args = Editor.getArgs();
+        String host = "localhost";
+        int porta = 3000;
+        if (args[0] != null)
+          host = args[0];
+        if (args[1] != null)
+          porta = Integer.parseInt(args[1]);
+        cliente = new Cliente(host, porta);
         statusBarCon.setText("Conexão: conectado");
       }
       catch (ConnectException ex)
