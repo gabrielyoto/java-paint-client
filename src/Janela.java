@@ -966,7 +966,7 @@ public class Janela extends JFrame {
           host = args[0];
         if (args[1] != null)
           porta = Integer.parseInt(args[1]);
-        cliente = new Cliente(host, porta);
+        cliente = new Cliente(host, porta, Janela.this, statusBarCon);
         statusBarCon.setText("Conexão: conectado");
       }
       catch (ConnectException ex)

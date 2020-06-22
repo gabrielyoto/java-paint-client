@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.net.*;
 import java.io.*;
 import java.util.Vector;
@@ -8,18 +9,19 @@ public class Cliente
 	public static final int PORTA_PADRAO = 3000;
 
 	protected Parceiro servidor = null;
+	protected TratadoraDeComunicadoDeDesligamento tratadoraDeComunicadoDeDesligamento;
 
-	public Cliente() throws ConnectException
+	public Cliente(Janela janela, JLabel statusBar) throws ConnectException
 	{
-		this(HOST_PADRAO, PORTA_PADRAO);
+		this(HOST_PADRAO, PORTA_PADRAO, janela, statusBar);
 	}
 
-	public Cliente(String host) throws ConnectException
+	public Cliente(String host, Janela janela, JLabel statusBar) throws ConnectException
 	{
-		this(host, PORTA_PADRAO);
+		this(host, PORTA_PADRAO, janela, statusBar);
 	}
 
-	public Cliente(String host, int porta) throws ConnectException
+	public Cliente(String host, int porta, Janela janela, JLabel statusBar) throws ConnectException
 	{
 		Socket conexao;
 		try
@@ -70,13 +72,12 @@ public class Cliente
 		TratadoraDeComunicadoDeDesligamento tratadoraDeComunicadoDeDesligamento;
 		try
 		{
-			tratadoraDeComunicadoDeDesligamento = new TratadoraDeComunicadoDeDesligamento(servidor);
+			tratadoraDeComunicadoDeDesligamento = new TratadoraDeComunicadoDeDesligamento(servidor, janela, statusBar);
 		}
 		catch (Exception ignored)
 		{
 			throw new ConnectException();
 		}
-
 		tratadoraDeComunicadoDeDesligamento.start();
 	}
 
