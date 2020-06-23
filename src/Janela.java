@@ -832,6 +832,7 @@ public class Janela extends JFrame {
           pnlDesenho.getGraphics().clearRect(0, 0, pnlDesenho.getWidth(), pnlDesenho.getHeight());
           while (leitor.hasNextLine()) {
             String figura = leitor.nextLine();
+            desenho.addFigura(figura);
             StringTokenizer quebrador = new StringTokenizer(figura,":");
             switch (quebrador.nextToken()) {
               case "p":
@@ -1028,21 +1029,70 @@ public class Janela extends JFrame {
         JOptionPane.showMessageDialog(Janela.this, "Nenhuma conexão encontrada!");
         return;
       }
-      ArrayList<Desenho> listaDesenhos;
+      ArrayList<String> listaDesenhos;
       try {
-        listaDesenhos = cliente.carregar();
-        ArrayList<String> nomesDesenhos = new ArrayList<>();
-        for (Desenho desenho : listaDesenhos)
-        {
-          nomesDesenhos.add(desenho.getNome());
-        }
-        JList list = new JList(nomesDesenhos.toArray());
+        listaDesenhos = cliente.listar();
+        JList<Object> list = new JList<>(listaDesenhos.toArray());
         JanelaDesenhos dialog = new JanelaDesenhos("Selecionar do servidor", "Selecione o desenho para" +
             " carregar: ", list);
-        dialog.setOnOk(ev -> System.out.println("Chosen item: " + dialog.getSelectedItem()));
+        dialog.setOnOk(ev -> carregarDesenho(dialog.getSelectedItem().toString()));
         dialog.show();
       } catch (Exception ex) {
         JOptionPane.showMessageDialog(Janela.this, "Não foi possível carregar os desenhos!");
+        ex.printStackTrace();
+      }
+    }
+
+    public void carregarDesenho(String nome) {
+      try {
+        Desenho desenho = cliente.carregar(nome);
+        figuras.clear();
+        pnlDesenho.getGraphics().clearRect(0, 0, pnlDesenho.getWidth(), pnlDesenho.getHeight());
+        String[] figurasNoDesenho = desenho.toString().split("\n");
+        for (String figura : figurasNoDesenho) {
+          StringTokenizer quebrador = new StringTokenizer(figura, ":");
+          try {
+            switch (quebrador.nextToken()) {
+              case "p":
+                figuras.add(new Ponto(figura));
+                figuras.get(figuras.size() - 1).torneSeVisivel(pnlDesenho.getGraphics());
+                break;
+              case "c":
+                figuras.add(new Circulo(figura));
+                figuras.get(figuras.size() - 1).torneSeVisivel(pnlDesenho.getGraphics());
+                break;
+              case "l":
+                figuras.add(new Linha(figura));
+                figuras.get(figuras.size() - 1).torneSeVisivel(pnlDesenho.getGraphics());
+                break;
+              case "e":
+                figuras.add(new Elipse(figura));
+                figuras.get(figuras.size() - 1).torneSeVisivel(pnlDesenho.getGraphics());
+                break;
+              case "q":
+                figuras.add(new Quadrado(figura));
+                figuras.get(figuras.size() - 1).torneSeVisivel(pnlDesenho.getGraphics());
+                break;
+              case "r":
+                figuras.add(new Retangulo(figura));
+                figuras.get(figuras.size() - 1).torneSeVisivel(pnlDesenho.getGraphics());
+                break;
+              case "t":
+                figuras.add(new Texto(figura));
+                figuras.get(figuras.size() - 1).torneSeVisivel(pnlDesenho.getGraphics());
+                break;
+              case "po":
+                figuras.add(new Poligono(figura));
+                figuras.get(figuras.size() - 1).torneSeVisivel(pnlDesenho.getGraphics());
+                break;
+            }
+          } catch (Exception ex) {
+            ex.printStackTrace();
+          }
+        }
+      }
+      catch (Exception ex)
+      {
         ex.printStackTrace();
       }
     }

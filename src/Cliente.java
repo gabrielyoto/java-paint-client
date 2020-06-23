@@ -92,7 +92,7 @@ public class Cliente
 		}
 	}
 
-	public ArrayList<Desenho> carregar() throws Exception
+	public ArrayList<String> listar() throws Exception
 	{
 		try
 		{
@@ -105,6 +105,26 @@ public class Cliente
 			while (!(comunicado instanceof ListaDesenhos));
 			ListaDesenhos desenhos = (ListaDesenhos)servidor.envie();
 			return desenhos.getDesenhos();
+		}
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+			throw new Exception(ex);
+		}
+	}
+
+	public Desenho carregar(String nome) throws Exception
+	{
+		try
+		{
+			servidor.receba(new PedidoDesenho(nome));
+			Comunicado comunicado;
+			do
+			{
+				comunicado = servidor.espie();
+			}
+			while (!(comunicado instanceof Desenho));
+			return (Desenho)servidor.envie();
 		}
 		catch (Exception ex)
 		{

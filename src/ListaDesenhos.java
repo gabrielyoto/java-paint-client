@@ -1,13 +1,13 @@
 import java.util.ArrayList;
 
 public class ListaDesenhos extends Comunicado {
-  ArrayList<Desenho> desenhos;
-  public ListaDesenhos(ArrayList<Desenho> desenhos)
+  ArrayList<String> desenhos;
+  public ListaDesenhos(ArrayList<String> desenhos)
   {
     this.desenhos = desenhos;
   }
 
-  public ArrayList<Desenho> getDesenhos() {
+  public ArrayList<String> getDesenhos() {
     return desenhos;
   }
 }
