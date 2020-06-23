@@ -1,5 +1,6 @@
 import say.swing.JFontChooser;
 import javax.swing.JFileChooser;
+import java.awt.List;
 import java.io.File;
 import java.awt.*;
 import java.awt.event.*;
@@ -290,7 +291,7 @@ public class Janela extends JFrame {
     btnConectar.addActionListener(new Conectar());
     btnSalvarRemoto.addActionListener(new SalvarRemoto());
     btnDesconectar.addActionListener(new Desconectar());
-    //btnSelecionar.addActionListener(new SelecionarRemoto());
+    btnSelecionar.addActionListener(new SelecionarRemoto());
 
     JPanel pnlBotoes = new JPanel();
     JPanel pnlBotoes2 = new JPanel();
@@ -941,15 +942,24 @@ public class Janela extends JFrame {
   protected class EncerrarPrograma implements ActionListener {
     public void actionPerformed(ActionEvent e)
     {
-      if (JOptionPane.showConfirmDialog(Janela.this, "Você realmente deseja fechar o programa", "Paint",
-          JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
-        System.exit(0);
+      if (JOptionPane.showConfirmDialog(Janela.this, "Você realmente deseja fechar o programa",
+              "Paint", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+          if (cliente != null)
+          {
+              cliente.desconectarSe();
+          }
+          System.exit(0);
+      }
     }
   }
 
-  protected static class FechamentoDeJanela extends WindowAdapter {
+  protected class FechamentoDeJanela extends WindowAdapter {
     public void windowClosing(WindowEvent e)
     {
+      if (cliente != null)
+      {
+          cliente.desconectarSe();
+      }
       System.exit(0);
     }
   }
@@ -979,6 +989,8 @@ public class Janela extends JFrame {
 
   protected class Desconectar implements ActionListener {
     public void actionPerformed(ActionEvent e) {
+      if (statusBarCon.getText().equals("Conexão: desconectado"))
+        cliente = null;
       if (cliente == null)
       {
         JOptionPane.showMessageDialog(Janela.this, "Nenhuma conexão encontrada!");
@@ -992,6 +1004,8 @@ public class Janela extends JFrame {
 
   protected class SalvarRemoto implements ActionListener {
     public void actionPerformed(ActionEvent e) {
+      if (statusBarCon.getText().equals("Conexão: desconectado"))
+        cliente = null;
       if (cliente == null)
       {
         JOptionPane.showMessageDialog(Janela.this, "Nenhuma conexão encontrada!");
@@ -1002,6 +1016,35 @@ public class Janela extends JFrame {
         nome = JOptionPane.showInputDialog(Janela.this, "Digite o nome do desenho");
       desenho.setNome(nome);
       cliente.salvar(desenho);
+    }
+  }
+
+  protected class SelecionarRemoto implements ActionListener {
+    public void actionPerformed(ActionEvent e) {
+      if (statusBarCon.getText().equals("Conexão: desconectado"))
+        cliente = null;
+      if (cliente == null)
+      {
+        JOptionPane.showMessageDialog(Janela.this, "Nenhuma conexão encontrada!");
+        return;
+      }
+      ArrayList<Desenho> listaDesenhos;
+      try {
+        listaDesenhos = cliente.carregar();
+        ArrayList<String> nomesDesenhos = new ArrayList<>();
+        for (Desenho desenho : listaDesenhos)
+        {
+          nomesDesenhos.add(desenho.getNome());
+        }
+        JList list = new JList(nomesDesenhos.toArray());
+        JanelaDesenhos dialog = new JanelaDesenhos("Selecionar do servidor", "Selecione o desenho para" +
+            " carregar: ", list);
+        dialog.setOnOk(ev -> System.out.println("Chosen item: " + dialog.getSelectedItem()));
+        dialog.show();
+      } catch (Exception ex) {
+        JOptionPane.showMessageDialog(Janela.this, "Não foi possível carregar os desenhos!");
+        ex.printStackTrace();
+      }
     }
   }
 }

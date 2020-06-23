@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.net.*;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Vector;
 
 public class Cliente
@@ -88,6 +89,27 @@ public class Cliente
 			servidor.receba(new PedidoSalvamento(desenho));
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	public ArrayList<Desenho> carregar() throws Exception
+	{
+		try
+		{
+			servidor.receba(new PedidoDesenhos());
+			Comunicado comunicado;
+			do
+			{
+				comunicado = servidor.espie();
+			}
+			while (!(comunicado instanceof ListaDesenhos));
+			ListaDesenhos desenhos = (ListaDesenhos)servidor.envie();
+			return desenhos.getDesenhos();
+		}
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+			throw new Exception(ex);
 		}
 	}
 
