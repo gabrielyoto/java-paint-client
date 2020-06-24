@@ -1,6 +1,5 @@
+import java.net.Inet4Address;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
@@ -10,7 +9,8 @@ public class Desenho extends Comunicado
   private static final long serialVersionUID = 6529685098267757691L;
   private String nome;
   private final String dataCriacao;
-  private final String dataUltimaAtualizacao;
+  private String dataUltimaAtualizacao;
+  private String ip = "";
   private final ArrayList<String> conteudo = new ArrayList<>();
 
   public Desenho(String nome, String dataCriacao, String dataUltimaAtualizacao)
@@ -18,6 +18,11 @@ public class Desenho extends Comunicado
     this.nome = nome;
     this.dataCriacao = dataCriacao;
     this.dataUltimaAtualizacao = dataUltimaAtualizacao;
+    try {
+      this.ip = Inet4Address.getLocalHost().getHostAddress();
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
   }
 
   public Desenho(String nome, Date dataCriacao, Date dataUltimaAtualizacao)
@@ -32,6 +37,11 @@ public class Desenho extends Comunicado
   {
     conteudo.add(figura);
     return conteudo.size();
+  }
+
+  public String remove(int i)
+  {
+    return conteudo.remove(i);
   }
 
   public int getQuantidade()
@@ -81,11 +91,29 @@ public class Desenho extends Comunicado
     this.nome = nome;
   }
 
+  public void setIp()
+  {
+    try {
+      this.ip = Inet4Address.getLocalHost().getHostAddress();
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
+  }
+
+  public void setAtualizacao(String dataUltimaAtualizacao)
+  {
+    this.dataUltimaAtualizacao = dataUltimaAtualizacao;
+  }
+
   public String getDataCriacao() {
     return dataCriacao;
   }
 
   public String getDataUltimaAtualizacao() {
     return dataUltimaAtualizacao;
+  }
+
+  public String getIp() {
+    return ip;
   }
 }
