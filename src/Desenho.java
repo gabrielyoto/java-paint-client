@@ -1,3 +1,4 @@
+import java.net.Inet4Address;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -12,9 +13,16 @@ public class Desenho extends Comunicado
   private final String dataCriacao;
   private final String dataUltimaAtualizacao;
   private final ArrayList<String> conteudo = new ArrayList<>();
+  private String ip = "";
 
   public Desenho(String nome, String dataCriacao, String dataUltimaAtualizacao)
   {
+    try {
+      ip = Inet4Address.getLocalHost().getHostAddress();
+    } catch (Exception ex)
+    {
+      ex.printStackTrace();
+    }
     this.nome = nome;
     this.dataCriacao = dataCriacao;
     this.dataUltimaAtualizacao = dataUltimaAtualizacao;
@@ -32,6 +40,11 @@ public class Desenho extends Comunicado
   {
     conteudo.add(figura);
     return conteudo.size();
+  }
+
+  public void remove(int index)
+  {
+    conteudo.remove(index);
   }
 
   public int getQuantidade()

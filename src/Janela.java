@@ -933,6 +933,7 @@ public class Janela extends JFrame {
         return;
       }
       figuras.remove(figuras.size() - 1);
+      desenho.remove(figuras.size());
       pnlDesenho.getGraphics().clearRect(0, 0, pnlDesenho.getWidth(), pnlDesenho.getHeight());
       for (Figura figura : figuras) {
         figura.torneSeVisivel(pnlDesenho.getGraphics());
@@ -1045,11 +1046,13 @@ public class Janela extends JFrame {
 
     public void carregarDesenho(String nome) {
       try {
-        Desenho desenho = cliente.carregar(nome);
+        Desenho desenhoCarregado = cliente.carregar(nome);
+        desenho = desenhoCarregado;
         figuras.clear();
         pnlDesenho.getGraphics().clearRect(0, 0, pnlDesenho.getWidth(), pnlDesenho.getHeight());
-        String[] figurasNoDesenho = desenho.toString().split("\n");
+        String[] figurasNoDesenho = desenhoCarregado.toString().split("\n");
         for (String figura : figurasNoDesenho) {
+          desenho.addFigura(figura);
           StringTokenizer quebrador = new StringTokenizer(figura, ":");
           try {
             switch (quebrador.nextToken()) {
