@@ -12,9 +12,16 @@ public class Desenho extends Comunicado
   private String dataUltimaAtualizacao;
   private String ip = "";
   private final ArrayList<String> conteudo = new ArrayList<>();
+  private String ip = "";
 
   public Desenho(String nome, String dataCriacao, String dataUltimaAtualizacao)
   {
+    try {
+      ip = Inet4Address.getLocalHost().getHostAddress();
+    } catch (Exception ex)
+    {
+      ex.printStackTrace();
+    }
     this.nome = nome;
     this.dataCriacao = dataCriacao;
     this.dataUltimaAtualizacao = dataUltimaAtualizacao;

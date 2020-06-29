@@ -1054,6 +1054,7 @@ public class Janela extends JFrame {
         pnlDesenho.getGraphics().clearRect(0, 0, pnlDesenho.getWidth(), pnlDesenho.getHeight());
         String[] figurasNoDesenho = desenhoCarregado.toString().split("\n");
         for (String figura : figurasNoDesenho) {
+          desenho.addFigura(figura);
           StringTokenizer quebrador = new StringTokenizer(figura, ":");
           try {
             switch (quebrador.nextToken()) {
